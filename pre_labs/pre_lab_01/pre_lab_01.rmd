@@ -156,7 +156,7 @@ umd_courses |>
   arrange(desc(count_classes))
 ```
 
-Compared to the previous codeblock, what has changed and how did that affect the result? **Answer**
+Compared to the previous codeblock, what has changed and how did that affect the result? **Answer the classes are grouped by term**
 
 ### Task 11: Grouping by multiple columns
 
@@ -173,7 +173,7 @@ umd_courses |>
 
 Compared to the previous codeblock, how did the output change and what in the code changed it?
 
-**Answer**
+**Answer the code just says that the group is output by term and than that it needs to be overridden using the groups argument.**
 
 ### Task 12: Other summary functions
 
@@ -189,7 +189,7 @@ umd_courses |>
   arrange(desc(total_seats))
 ```
 
-Compared to the previous codeblock, what has changed and how did that affect the result? **Answer**
+Compared to the previous codeblock, what has changed and how did that affect the result? **Answer the total seats are ordered in descending order.**
 
 ### Task 13: different kinds of summarizations
 
@@ -207,7 +207,7 @@ umd_courses |>
   arrange(desc(total_seats))
 ```
 
-Compared to the previous codeblock, what has changed and how did that affect the result? What do the top terms have in common? **Answer**
+Compared to the previous codeblock, what has changed and how did that affect the result? What do the top terms have in common? **Answer there are more columns including the median and mean number of seats. the last two columns are stats about the total number of seats.**
 
 ### Task 14: more aggregations
 
@@ -229,7 +229,7 @@ umd_courses |>
 
 Compared to the previous codeblock, what has changed and how did that affect the result? How is the data sorted?
 
-**Answer**
+**Answer Instead of term codes there is the department name following the classes, total seats, mean and median seats.**
 
 ### Task 12: Questions
 
@@ -237,8 +237,8 @@ No code here; I want you to provide three questions that this data suggests to y
 
 **Answer**
 
-1.  
+1.  What are the maximum number of seats for each course and term specifically?
 
-2.  
+2.  Are the mean number of seats representative of the students in the department?
 
-3.  
+3.  Do the number of students total, are less, or greater than the number of seats offered?

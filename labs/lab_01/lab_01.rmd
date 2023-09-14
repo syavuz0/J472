@@ -40,25 +40,52 @@ umd_courses <- read_rds("lab_01.rds")
 ## Answer questions
 
 **Q1** Which department has the highest mean (average) number of seats for its classes? You need to show the department with the highest average first. Which one is the most surprising/interesting to you?
-**A1**
+**A1** The Engineering, Cooperative Education Department has the highest average of seats for its classes. The value is at 306. This is surprising to me because Computer Science and Business and Management are some of the biggest departments on campus, I would have expected them to have the most based on the number of students enrolled in the programs.
 
 ```{r}
+umd_courses |>
+  group_by(department) |>
+  summarise(
+    count_classes = n(),
+    total_seats = sum(seats),
+    mean_seats = mean(seats),
+    median_seats = median(seats),
+  ) |>
+  arrange(desc(mean_seats))
 ```
 
 **Q2** Find out the greatest number of times any individual class has been offered in our dataset. Your code must show the greatest number of classes first. 
-**A2**
+**A2** The greatest number of times a class has been offered is 15 times. The ID for the class is WMST899.
 
 ```{r}
+umd_courses |>
+  group_by(id) |>
+  summarise(
+    max_id = n()
+  ) |>
+  arrange(desc(id))
 ```
 
-**Q3** Count the number of courses for each instructor and department. Which instructor has taught the most? **A3**
+**Q3** Count the number of courses for each instructor and department. Which instructor has taught the most? **A3** Keith Yearwood taught the most classes at a value of 61. The department is Geographical Sciences.
 
 ```{r}
+umd_courses |>
+  group_by(department, instructors) |>
+  summarise(
+    count_classes = n(),
+  ) |>
+  arrange(desc(count_classes))
 ```
 
-**Q4** Given the results for Q3, what would have made it easier to find the answer? You don't have to know *how* to accomplish this; I want you to describe in words what would make the answer easier to see. How confident are you that the answer you got is the right one, and why? **A4**
+**Q4** Given the results for Q3, what would have made it easier to find the answer? You don't have to know *how* to accomplish this; I want you to describe in words what would make the answer easier to see. How confident are you that the answer you got is the right one, and why? **A4** It would have been easier if all of the classes without instructors were omitted from the code. Instead of scrolling to find the first instructor it could get rid of the values without ones. 
 
-**Q5** Take one of the questions you listed in the final question of the pre_lab and try to answer it here in code. If you don't know how to fully answer it, write what code you can and describe in words what else you would need to do. If you got an answer, is it interesting? **A5**
+**Q5** Take one of the questions you listed in the final question of the pre_lab and try to answer it here in code. If you don't know how to fully answer it, write what code you can and describe in words what else you would need to do. If you got an answer, is it interesting? **A5**  I would add  or a similar line of code to get rid of the values without instructors in the third question. Or try to write a funciton that would delete values without assigned instructors. However, I am not sure what values varibles or code would give me that result because I am unfamiliar with the terms.It is also not working when I run it. 
 
 ```{r}
+umd_courses |>
+  group_by(department, instructors) |>
+  summarise(
+    count_classes = n(),
+  ) |>
+  arrange(desc(count_classes)) |> no.omit()
 ```
