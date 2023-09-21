@@ -234,7 +234,7 @@ general_22 <- general_22 |>
 
 Describe what you think this code is doing below.
 
-**Answer**
+**Answer Its adding the total votes for cox , moore, lashar, wallace, and the other write_ins as with ell as calculating the value for the proportion of moores votes to the total votes**
 
 ### Task 11: Better percentage calculation
 
