@@ -263,7 +263,7 @@ general_22 <- general_22 |>
 
 How did the answer change from the previous task, and why?
 
-**Answer**
+**Answer Its giving the percent number instead of the proportion, as well as arranging the percent of moore votes in descending order.**
 
 ### Task 13: Mutate with ordering, part 2
 
@@ -277,7 +277,7 @@ general_22 |>
 
 Is this a more interesting or useful answer? Why?
 
-**Answer**
+**Answer I am unable to see the chart from the last section of code, but I would have prepared to see the number of votes in order instead, which is easier for readability**
 
 ### Task 14: Standardize existing data using mutate
 
@@ -300,7 +300,7 @@ standardized_maryland_expenses <- maryland_expenses |>
 
 **Task** Search the Internet for tidyverse functions similar to str_to_upper. Name at least two and describe what they do. If you use ChatGPT for this, include the question you submitted.
 
-**Answer**
+**Answer str_to_lower lowercases the strings or characters. str_to_Title() uppercases the first letter of each word.**
 
 There are lots of potential uses for standardization - addresses, zip codes, anything that can be misspelled or abbreviated.
 
@@ -310,7 +310,7 @@ Mutate is even more useful when combined with some additional functions. Let's k
 
 **Task** Run the following code and look at the output. Then write a sentence or two describing what you think the mutate statement is doing step by step.
 
-**Answer**
+**Answer it is detected different states and associating them with state abbreviations.**
 
 ```{r}
 maryland_expenses_with_state <- maryland_expenses |>
@@ -345,7 +345,7 @@ maryland_expenses_with_state |>
 
 Does this answer make sense to you? Why or why not?
 
-**Answer**
+**Answer it makes sense to me because I know where the data is coming from and what the abbreviations mean, as well as the descriptions of the columns. I do not understand why the totals are decimal numbers however.**
 
 Mutate is there to make your data more useful and to make it easier for you to ask more and better questions of it.
 
@@ -355,8 +355,8 @@ Now that you have seen how to use mutate, filtering and dates, give me three que
 
 **Answer**
 
-1.  
+1.  How would you utilize functions to mask dirty data?
 
-2.  
+2.  Do the dates have to be in any specific format for the code to be able to read it and reformat?
 
-3.  
+3.  How complex can filtering get in terms of arranging numbers and categories?
