@@ -32,7 +32,8 @@ For this lab, we want to investigate spending by Maryland state and local candid
 The basic process here is to start in RStudio, export data so that we can use OpenRefine to clean it up, and then bring it back into RStudio to finish our analysis. The function to export data from RStudio is called `write_csv()` and it takes two arguments: the name of the dataframe and the path of the file to write it to, which is in quotes. Like `read_csv()`, but the variable name comes inside. Here's an example, in which you'd replace the dataframe and the path values.
 
 ```{r}
-write_csv(dataframe, "folder/file.csv")
+md_expenses <- read.csv("data/maryland_expenses.csv")
+md_expenses 
 ```
 
 ## Load Data
@@ -43,9 +44,14 @@ You'll need to load one data set, a CSV file of Maryland campaign expenditures l
 
 ```{r}
 # Load the Maryland expenditures data table, clean the column names and convert columns with dates into actual dates.
+cleaned_md_expenses <- md_expenses |>
+  clean_names()
+  mutate(Expenditure.Date=mdy(Expenditure.Date))
 
-md_expenses <- read.csv("data/maryland_expenses.csv")
-md_expenses
+
+ 
+
+
 ```
 
 ## Answer questions
@@ -60,12 +66,23 @@ Then, using that `payee_clean` column, write code to find all of the spending wh
 
 ```{r}
 # One step at a time. Find the category column in the data that has values for different kinds of spending.
+md_expenses |>
+  group_by(Expense.Category)
+  summarise(amount = sum(amount))
+  arrange(desc(amount))
 
 
 ```
 
 ```{r}
 # One of them is "Media". Write code to isolate Media expenses where the name of the payee is not NA. They key here is using (!is.na(payee_name)) within a function
+media_expenses <- cleaned_md_expenses |>
+  group_by(total) |>
+  summarise(
+    count=n()
+  ) |>
+  filter(str_detect(Expense.Category, 'Media')) |>
+  arrange(Expense.Category)
 
 
 ```
@@ -73,7 +90,7 @@ Then, using that `payee_clean` column, write code to find all of the spending wh
 ```{r}
 # Export this table as a CSV
 
-
+write.csv(media_expenses, "media_expenses_clean.csv")
 
 
 # Clean up work in OpenRefine
@@ -82,30 +99,46 @@ Then, using that `payee_clean` column, write code to find all of the spending wh
 
 ```{r}
 # read the cleaned CSV 
+read.csv("data/media_expenses_clean.csv")
 # calculate top Facebook spenders
+media_expenses |>
+  filter(str_detect(Payee.Name, "Facebook") |>
+  group_by(amount = sum(amount)) |>
+  arrange(desc(amount))
 
 ```
 
 **Q2.** Let's do some research on the top committees from question 1. Look up the top 10 spenders: if they are candidate committees, what offices were they running for? If they were not candidates, what issues do they seem to care about? Write some sentences answering those questions, then go the Facebook ad library ([https://www.facebook.com/ads/library/?active_status=all&ad_type=political_and_issue_ads&country=US&sort_data\\[direction\\]=desc&sort_data\\[mode\\]=relevancy_monthly_grouped&media_type=all](https://www.facebook.com/ads/library/?active_status=all&ad_type=political_and_issue_ads&country=US&sort_data%5Bdirection%5D=desc&sort_data%5Bmode%5D=relevancy_monthly_grouped&media_type=all){.uri}) and look for ads from the top spender. What do you notice about those ads?
 
-**A2.**
+**A2. I'm having a bit of trouble with visualizing the data, but from scrolling through the data set, it looks like consulting fees get a really high amount of money from Harris Public Affairs. The ads are general political or have to do with government affiliation.**
 
 **Q3.** Given the list of top spenders in A1 and the primary results for governor (<https://elections.maryland.gov/elections/2022/primary_results/gen_results_2022_1.html>), who is missing from that A1 list? Did those campaigns run Facebook ads, according to Facebook's ad library? Who are the biggest recipients of media expenses by the Democratic primary winner for governor (HINT: that person has two committees)?
 
-**A3.**
+**A3. I am not able to visualize the data because I keep getting errors about incomplete expressions, but I assume my approach to the code is correct. I apologize for the inconvenience.**
 
 ```{r}
+media_expenses |>
+  filter(str_detect(Expense.Toward, "Moore") |>
+  group_by(amount = sum(amount)) |>
+  arrange(desc(amount))
+
 
 ```
 
 **Q4.** The media expense data you cleaned also has a standardized purpose column. Write code to generate a list of the committees with the total amount of spending on online advertising. How does this list compare to the one from Q1 about top Facebook spenders? Of the top 5 committees who spent the most on Facebook ads from Q1, are there any that appear to have spent *all* of their online advertising dollars on Facebook?
 
-**A4.**
+**A4. Unfortunately, I don't know why R cannot detect my str_detect() function, and I don't know how to solve the problem. Apologies again.**
 
 ```{r}
+advertising_expenses <- md_expenses |>
+  filter(str_detect(Expense.Purpose, "Online Advertising") & str_detect(Payee.Name, "Facebook")) |>
+  group_by(amount = sum(amount)) |>
+  summarise(amount) |>
+  arrange(desc(amount))
+
 
 ```
 
 **Q5** You've been asked to summarize your findings about spending on Facebook by Maryland political candidates. How much do we know and what don't we know? What's the best story idea you've found here?
 
-**A5**
+**A5 One of the best stories out of this data set is the comparison between high level of money that is being spent on advertising for democratic candidates.**
