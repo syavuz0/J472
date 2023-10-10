@@ -43,6 +43,9 @@ You'll need to load one data set, a CSV file of Maryland campaign expenditures l
 
 ```{r}
 # Load the Maryland expenditures data table, clean the column names and convert columns with dates into actual dates.
+
+md_expenses <- read.csv("data/maryland_expenses.csv")
+md_expenses
 ```
 
 ## Answer questions
