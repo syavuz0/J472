@@ -188,7 +188,7 @@ earthquakes |> filter(serious == 'Serious' & type == 'earthquake')
 
 ```
 
-**A12**: The data can change based on when it was loaded.
+**A12**: The data can change based on when it was
 
 ------------------------------------------------------------------------
 
