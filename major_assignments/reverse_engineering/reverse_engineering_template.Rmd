@@ -36,8 +36,8 @@ In this section, describe the source of the data, write a basic data dictionary 
 
 ```{r}
 # Load required data
-dc_data <- read.csv("data/dc-wikia-data.csv")
-marvel_data <- read.csv("data/marvel-wikia-data.csv")
+dc_data <- read_csv("data/dc-wikia-data.csv")
+marvel_data <- read_csv("data/marvel-wikia-data.csv")
 
 # Path to data should be loaded from folder "data" i.e. read_csv("data/name_of_data.csv")
 
@@ -70,7 +70,7 @@ marvel_data |>
 
 ### Sentence 2
 
--   **Sentence text**: Ms. Marvel is one of just 3,599 female characters in Marvel\'s universe.
+-   **Sentence text**: Ms. Marvel is one of just 3,599 female characters in Marvel's universe.
 -   **Analysis summary**: The number is higher than the one in the article, but that could be due to more entries in the data set.
 
 ```{r}
@@ -126,3 +126,28 @@ marvel_data |>
 ```
 
 -30-
+
+-   
+
+```{r}
+# Put code to display and visualize data
+marvel_data_vis <- marvel_data |>
+  group_by(SEX) |>
+  summarize(count = n()) |>
+  mutate(pct_female = count/16376*100) |>
+    arrange(desc(pct_female))
+
+marvel_data_vis |>
+  ggplot() +
+  geom_bar(aes(x=SEX, weight=pct_female)) +
+  coord_flip() + 
+  theme_economist() +
+  labs(
+    title="Percentage of SEX in Marvel Comics",
+    x = "SEX",
+    y = "Percent",
+    caption = "source: Whalt Hickey" )
+    
+
+
+```
