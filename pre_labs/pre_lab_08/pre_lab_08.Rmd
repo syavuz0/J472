@@ -52,7 +52,7 @@ First, we'll add a month column to our dataframe using lubridate.
 
 ### Task 3: Add a month column to our 911 calls dataframe using lubridate and calculate the number of calls for each month
 
-**Task** Run the following code to add a month column to our dataframe using lubridate and count the number of calls for each month. In the space below, explain what each step of the code below is doing in English. Note the "label=TRUE" part in the mutate statement. **Answer**
+**Task** Run the following code to add a month column to our dataframe using lubridate and count the number of calls for each month. In the space below, explain what each step of the code below is doing in English. Note the "label=TRUE" part in the mutate statement. **Answer The dates have been changed to show just the month through the mutate function, then each call is added up and summarized to show the total calls during each month.**
 
 ```{r}
 baltco_911_calls_by_month <- baltco_911_calls |>
@@ -70,7 +70,7 @@ With ggplot, the first thing we'll always do is draw a blank canvas that will co
 
 ### Task 4: Create an empty ggplot container
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. **Answer No data points are plotted, the graph is empty.**
 
 ```{r}
 baltco_911_calls_by_month |>
@@ -101,7 +101,7 @@ After we've invoked the ggplot() function, you'll notice we're using a + symbol.
 
 ### Task 5: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. **Answer What is shown is a simple bar chart that reflects the count of calls per month.**
 
 ```{r}
 baltco_911_calls_by_month |>
@@ -113,7 +113,7 @@ This is a very basic chart. But it's hard to derive much meaning from this chart
 
 ### Task 6: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer the columns are organized in ascending order which moves the chronological order of the months around.**
 
 ```{r}
 baltco_911_calls_by_month |>
@@ -125,7 +125,7 @@ This is a little more useful. But the bottom is kind of a mess, with overlapping
 
 ### Task 7: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer The bar chart is displayed horizontally instead of vertically.**
 
 ```{r}
 baltco_911_calls_by_month |>
@@ -144,7 +144,7 @@ It's kind of like applying CSS to html. Here I'm changing the theme slightly to 
 
 ### Task 8: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer The graph is easier to read and more simple without weird spaces or lines. Less color, minimal theme.**
 
 ```{r}
 baltco_911_calls_by_month |>
@@ -171,7 +171,7 @@ And now we'll apply the economist theme from that package with theme_economist()
 
 ### Task 10: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last version of the chart? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last version of the chart? **Answer The background color and theme is different as well as font size of the labels.**
 
 ```{r}
 baltco_911_calls_by_month |>
@@ -185,7 +185,7 @@ Those axis titles are kind of a mess. Let's change "count" on the x axis to "tot
 
 ### Task 11: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. What has changed from the last codeblock? **Answer There is a header explaining the type of data that the graph is displaying.**
 
 ```{r}
 baltco_911_calls_by_month |>
@@ -214,7 +214,7 @@ So, let's use the same Baltimore County data and generate a count of contributio
 
 ### Task 12: Create a dataframe of 911 calls by date
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. **Answer I see the dates in regular month day year format with total calls.**
 
 ```{r}
 baltco_911_calls_by_date <- baltco_911_calls |>
@@ -232,7 +232,7 @@ We'll put the date on the x axis and total contributions on the y axis.
 
 ### Task 13: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. **Answer A very messy and hard to read line chart that displays the data through april to january.**
 
 ```{r}
 baltco_911_calls_by_date |>
@@ -250,7 +250,7 @@ We'll set the date_breaks to appear for every week; if we wanted every month, we
 
 ### Task 14: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. **Answer Dates labeled at the bottom but in a manner that cannot be read because of poor formatting.**
 
 ```{r}
 baltco_911_calls_by_date |>
@@ -263,7 +263,7 @@ Those are a little hard to read, so we can turn them 45 degrees to remove the ov
 
 ### Task 15: Run the following code
 
-**Task** Run the following code. Explain what you see after running the code in the space below. **Answer**
+**Task** Run the following code. Explain what you see after running the code in the space below. **Answer Text is slanted (labels) but easier to read than before.**
 
 ```{r}
 baltco_911_calls_by_date |>
