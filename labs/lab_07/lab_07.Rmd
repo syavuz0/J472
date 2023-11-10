@@ -24,6 +24,8 @@ You'll need to load two packages for this: the tidyverse and tidycensus.
 options(scipen=999)
 
 # Load the tidyverse.
+library(tidyverse)
+library(tidycensus)
 ```
 
 ## Setup Census API
@@ -47,16 +49,26 @@ v21 <- load_variables(2021, "acs5", cache=TRUE)
 
 ## Answer questions
 
-**Q1** What is the Maryland jurisdiction with the lowest median age, according to the ACS 2021 5-year estimates? You will need to find the variable for median age first (search for it in the 'concept' column at the data frame we just created). **A1**
+**Q1** What is the Maryland jurisdiction with the lowest median age, according to the ACS 2021 5-year estimates? You will need to find the variable for median age first (search for it in the 'concept' column at the data frame we just created). **A1 St. Mary's County has the lowest median age at 36.7**
 
 ```{r}
+md <- get_acs(geography = "county",
+              variables = c(medage = "B01002_001") ,
+              state = "MD",
+              year = 2021)
+
 
 ```
 
-**Q2** Which Maryland counties have a median age of at least 50? You can use the dataframe you just made to answer this, but you must write code to display only those counties with a median age of at least 50. **A2**
+```{r}
+md
+```
+
+**Q2** Which Maryland counties have a median age of at least 50? You can use the dataframe you just made to answer this, but you must write code to display only those counties with a median age of at least 50. **A2 I'm not sure why this code isn't specifically working, but my intention was to create a filter that only displays values that are above 50 for the median age column of the dataset. Looking at the previous one without the filter, I can tel that Talbot County has a median age of 51, which is the only value above 50.**
 
 ```{r}
-
+md_over_50 <- md |>
+      filter(medage > 50)
 ```
 
 **Q3** We're interested in knowing more about Montgomery County zip codes where overdose calls are coming from and the demographic characteristics they possess. In particular, we want to calculate a rate of calls per 1,000 population. To do this, you'll need to:
@@ -73,6 +85,28 @@ Which zip code has the highest rate of calls? Which has the lowest?
 **A3**
 
 ```{r}
+moco_911_data <- read_csv("data/montgomery_2022_overdoses.csv")
+
+zip_calls <- moco_911_data |>
+  group_by(zip) |>
+  summarise(total_calls = n()) 
+
+zip_calls
+
+pop_18_plus_acs <- get_acs(geography = "county",
+              variables = c(age18plus = "B01001_020E"),
+              state = "MD",
+              year = 2021)
+pop_18_plus_acs
+
+
+pop_18_plus_acs
+```
+
+```{pop_18_plus_acs <- pop_18_plus_acs |> left_join(zip_calls by=c('zip'='GEOID'))}
+pop_18_plus_acs <- pop_18_plus_acs |> mutate(rate=(total_calls/estimate*1000) |> drop_na()
+
+
 ```
 
 **Q4** Using [CensusReporter.org](https://censusreporter.org/), examine the zip codes with the highest and lowest rates and compare and contrast their demographic profiles. Is there a story here?

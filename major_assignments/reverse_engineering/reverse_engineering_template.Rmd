@@ -78,11 +78,18 @@ marvel_data |>
 # Put code to reverse engineer sentence here
 
 
+
+
 marvel_data |> 
   filter(str_detect(ID, "Secret Identity")) |>
   group_by(ID, SEX) |>
   summarise(count = n()) |> 
   mutate(pct_fem_secret_ID = count/16376*100) 
+
+
+
+
+
 
 # Display results of code below this codeblock
 #3837 of marvel characters are female
