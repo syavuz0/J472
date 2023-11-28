@@ -26,7 +26,7 @@ options(scipen=999)
 # Load the tidyverse.
 library(tidyverse)
 library(tidycensus)
-
+library(dplyr)
 ```
 
 ## Setup Census API
@@ -87,7 +87,7 @@ md_over_50
 
 Which zip code has the highest rate of calls? Which has the lowest?
 
-**A3**
+**A3 Montgomery County has the highest and Caroline County has the lowest.**
 
 ```{r}
 moco_911_data <- read_csv("data/montgomery_2022_overdoses.csv") |> clean_names()
@@ -103,25 +103,30 @@ pop_18_plus_acs <- get_acs(geography = "county",
               year = 2021)
 
 
-all_data <- left_join(pop_18_plus_acs, zip_calls, by=c('zip'='GEOID')) |> 
-  mutate(rate=(total_calls/estimate*1000)) |> drop_na()
 
-all_data
+all_data <- cross_join(pop_18_plus_acs,zip_calls) 
 
+all_data |> 
+  mutate(per_cap= estimate/total_calls) |>
+  arrange(desc(per_cap))
 ```
 
 ```{r}
 
-
+zip_calls
 ```
 
 **Q4** Using [CensusReporter.org](https://censusreporter.org/), examine the zip codes with the highest and lowest rates and compare and contrast their demographic profiles. Is there a story here?
 
-**A4**
+**A4 The zip codes with the highest rates are majority white and medium to high income areas. The lower rate in caroline county was with similar demographics except the median income was significantly lower in the first benchmark. The story could be research behind income's role in mental health.**
 
 **Q5** Go back to your joined dataframe from Q3 and add two more columns representing the minimum and maximum populations based on the estimate and margin of error, then calculate per capita rates for each. Do you get the same two zip codes for the highest and lowest as you did before? Does that give you more or less confidence in your answers to Q3?
 
-**A5**
+**A5 In all honesty, I was unable to come up with a solution that correctly answers the question in a timely manner. I would have ultimately created code that calculates the min and max for each row through mutating a new column with the correct formula for this calculation.**
 
 ```{r}
+all_data |>
+  mutate( min = min(estimate + moe)) |>
+  mutate( max = max(estimate +moe))
+
 ```
