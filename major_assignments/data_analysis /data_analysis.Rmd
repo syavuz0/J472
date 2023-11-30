@@ -1,0 +1,54 @@
+---
+  title: "Data Analysis Project"
+output: html_notebook
+---
+  
+
+```{r} 
+# Load libraries!
+library(tidyverse)
+library(janitor)
+
+options(scipen=999)
+```
+
+
+```{r} 
+md_payments <- read_csv("data/State_of_Maryland_Payments_Data__FY2008_to_FY2024.csv") |> clean_names()
+
+view(md_payments)
+
+# The data frame has 430584 rows and 8 columns
+
+# One limitation is that it might be difficult to define each industry just based on agency, and we do not know what each code in the category column means or stands for. In terms sof timeframe, we do not have limitations as our data spans from 2008 to 2024.
+
+```
+
+```{r} 
+
+md_payments_by_year <- md_payments |>
+  group_by(fiscal_year) |>
+  summarise(total = sum(amount)) |>
+  arrange(desc(total)) 
+
+md_payments_by_year
+
+md_payments_by_year |>
+  ggplot() + 
+  geom_bar(aes(x=fiscal_year, weight=total)) +
+  labs(
+    title = "Total Money Spent by State of Maryland per Fiscal Year",
+    x = "Fiscal Year",
+    y = "Total Amount",
+    caption = "source: Maryland State Payments Data") +
+  coord_flip()
+
+
+# Fiscal 2023 saw the highest spending from the Maryland government with $193,756,398,403 paid.
+# Fiscal 2022 was $36,656,748,838	
+
+```
+
+```{r}
+
+```
