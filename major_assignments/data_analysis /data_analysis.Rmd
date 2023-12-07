@@ -2,9 +2,8 @@
   title: "Data Analysis Project"
 output: html_notebook
 ---
-  
 
-```{r} 
+```{r}
 # Load libraries!
 library(tidyverse)
 library(janitor)
@@ -12,8 +11,7 @@ library(janitor)
 options(scipen=999)
 ```
 
-
-```{r} 
+```{r}
 md_payments <- read_csv("data/State_of_Maryland_Payments_Data__FY2008_to_FY2024.csv") |> clean_names()
 
 view(md_payments)
@@ -24,7 +22,8 @@ view(md_payments)
 
 ```
 
-```{r} 
+```{r}
+# sentence 1 
 
 md_payments_by_year <- md_payments |>
   group_by(fiscal_year) |>
@@ -50,5 +49,32 @@ md_payments_by_year |>
 ```
 
 ```{r}
+# sentence 2 
+
+```
+
+```{r}
+# sentence 3 
+
+```
+
+```{r}
+# sentence 4: Where are lower payments going compared to higher ones? (Nur) 
+
+# This piggy backs on the priorities of the state and if certain industries or counties are getting more or less money. This is newsworthy because a county could be getting neglected or could be struggling in a certain sector that people didn’t know. 
+
+md_payments_low <- md_payments |>
+  filter(amount < 100)
+
+md_payments_high <- md_payments |>
+  filter(amount > 1000000)
+
+md_payments_compare <-
+  left_join(md_payments_high, md_payments_low, by=c("amount"))
+  
+```
+
+```{r}
+# sentence 5 
 
 ```
