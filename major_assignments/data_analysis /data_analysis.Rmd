@@ -7,6 +7,7 @@ output: html_notebook
 # Load libraries!
 library(tidyverse)
 library(janitor)
+library(ggplot2)
 
 options(scipen=999)
 ```
@@ -23,7 +24,7 @@ view(md_payments)
 ```
 
 ```{r}
-# sentence 1 
+### Question 1: How does the distribution of spending change from year to year?
 
 md_payments_by_year <- md_payments |>
   group_by(fiscal_year) |>
@@ -49,32 +50,163 @@ md_payments_by_year |>
 ```
 
 ```{r}
-# sentence 2 
+### Question 2: Which industries spent the most money?
+
+#Health
+industry_data_health <- md_payments |>
+  filter(str_detect(agency_name, "HEALTH")) |>
+  group_by(fiscal_year) |>
+  summarise(total_health = sum(amount))
+
+md_payments |>
+  filter(str_detect(agency_name, "HEALTH")) |>
+  count(agency_name)
+
+#Education
+
+industry_data_education <- md_payments |>
+  filter(str_detect(agency_name, "EDUCATION") | str_detect(agency_name, "SCHOOL")) |>
+  group_by(fiscal_year) |>
+  summarise(total_education = sum(amount))
+
+md_payments |>
+  filter(str_detect(agency_name, "EDUCATION") | str_detect(agency_name, "SCHOOL")) |>
+  count(agency_name)
+
+#Housing
+
+industry_data_housing <- md_payments |>
+  filter(str_detect(agency_name, "HOUSING")) |>
+  group_by(fiscal_year) |>
+  summarise(total_housing = sum(amount))
+
+md_payments |>
+  filter(str_detect(agency_name, "HOUSING")) |>
+  count(agency_name)
+
+#Crime
+industry_data_crime <- md_payments |>
+
+  filter(str_detect(agency_name, "POLICE") | str_detect(agency_name, "CRIME") | str_detect(agency_name, "SAFETY")) |>
+  group_by(fiscal_year) |>
+  summarise(total_crime = sum(amount))
+
+md_payments |>
+  filter(str_detect(agency_name, "POLICE") | str_detect(agency_name, "CRIME") | str_detect(agency_name, "SAFETY")) |>
+  count(agency_name)
+
+#Labor
+
+industry_data_labor <- md_payments |>
+  filter(str_detect(agency_name, "LABOR")) |>
+  group_by(fiscal_year) |>
+  summarise(total_labor = sum(amount))
+
+md_payments |>
+  filter(str_detect(agency_name, "LABOR")) |>
+  count(agency_name)
+
+#Environment
+
+industry_data_environment <- md_payments |>
+  filter(str_detect(agency_name, "ENVIRONMENT") | str_detect(agency_name, "AGRICULTURE")) |>
+  group_by(fiscal_year) |>
+  summarise(total_environment = sum(amount))
+
+md_payments |>
+  filter(str_detect(agency_name, "ENVIRONMENT") | str_detect(agency_name, "AGRICULTURE")) |>
+  count(agency_name)
+
+#Commerce
+
+industry_data_commerce <- md_payments |>
+  filter(str_detect(agency_name, "COMMERCE") | str_detect(agency_name, "COMPTROLLER")) |>
+  group_by(fiscal_year) |>
+  summarise(total_commerce = sum(amount))
+
+md_payments |>
+  filter(str_detect(agency_name, "COMMERCE") | str_detect(agency_name, "COMPTROLLER")) |>
+  count(agency_name)
+
+#Transportation
+industry_data_transportation <- md_payments |>
+
+  filter(str_detect(agency_name, "HIGH") | str_detect(agency_name, "TRANS") | str_detect(agency_name, "MDOT")) |>
+  group_by(fiscal_year) |>
+  summarise(total_transportation = sum(amount))
+
+md_payments |>
+  filter(str_detect(agency_name, "HIGH") | str_detect(agency_name, "TRANS") | str_detect(agency_name, "MDOT")) |>
+  count(agency_name)
+
+#combine them all
+
+all_industry_data <- industry_data_commerce |>
+    inner_join(industry_data_crime, by = 'fiscal_year') |>
+    inner_join(industry_data_education, by = 'fiscal_year') |>
+    inner_join(industry_data_environment, by = 'fiscal_year') |>
+    inner_join(industry_data_health, by = 'fiscal_year') |>
+    inner_join(industry_data_housing, by = 'fiscal_year') |>
+    inner_join(industry_data_labor, by = 'fiscal_year') |>
+    inner_join(industry_data_transportation, by = 'fiscal_year')
 
 ```
 
 ```{r}
-# sentence 3 
+### Question 3: What counties or zip codes receive the most money?
+
+#Getting acs data on ZCTA
+
+md_zip_population <- get_acs(geography = "zcta",
+              variables = c(population = "B01001_001"),
+              year = 2019,
+              state = "MD")
+
+# Filtering md_payments to match the ZCTA data
+
+md_payments_2019 <- md_payments |>
+  filter(fiscal_year=="2019")|>
+  group_by(vendor_zip)|>
+  summarize(amount=sum(amount))|>
+  arrange(desc(amount))
+
+# Joining the md_payments with ZCTA data
+
+md_payments_2019 <- md_payments_2019 |>
+  inner_join(md_zip_population, by=c('vendor_zip'='GEOID'))
+md_payments_2019 <- md_payments_2019 |>
+  mutate(rate = estimate/amount*100)
+
 
 ```
 
 ```{r}
-# sentence 4: Where are lower payments going compared to higher ones? (Nur) 
-
-# This piggy backs on the priorities of the state and if certain industries or counties are getting more or less money. This is newsworthy because a county could be getting neglected or could be struggling in a certain sector that people didn’t know. 
+### Question 4: Where are lower payments going compared to higher one?
 
 md_payments_low <- md_payments |>
-  filter(amount < 100)
+  filter(amount < 100) |>
+  rename(amount_low =amount)
+
+md_payments_low |>
+  summarise(agency_name,vendor_name,amount_low)
 
 md_payments_high <- md_payments |>
-  filter(amount > 1000000)
+  filter(amount > 1000000) |>
+  rename(amount_high =amount)
 
-md_payments_compare <-
-  left_join(md_payments_high, md_payments_low, by=c("amount"))
+md_payments_high |> 
+  summarise(agency_name,vendor_name,amount_high)
+
+md_payments_low |>
+  ggplot() +
+  geom_bar(aes(x=reorder(vendor_name, amount, weight=amount) +
+  coord_flip()  
   
+# isn't displaying the graph for some reason, instead lists the objects 
+# problem might be with the vendor_name, amount section
 ```
 
 ```{r}
-# sentence 5 
+### Question 5: What types of payments are going to education? Are there differences in which systems recieve more/less money
 
 ```
