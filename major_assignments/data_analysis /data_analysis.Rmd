@@ -26,7 +26,6 @@ view(md_payments)
 ```{r}
 ### Question 1: How does the distribution of spending change from year to year?
 
-
 # Fiscal 2023 saw the highest spending from the Maryland government with $193,756,398,403 paid.
 # Fiscal 2022 was $36,656,748,838	
 
@@ -89,7 +88,6 @@ md_payments |>
   count(agency_name)
 
 #Education
-
 industry_data_education <- md_payments |>
   filter(str_detect(agency_name, "EDUCATION") | str_detect(agency_name, "SCHOOL")) |>
   group_by(fiscal_year) |>
@@ -100,7 +98,6 @@ md_payments |>
   count(agency_name)
 
 #Housing
-
 industry_data_housing <- md_payments |>
   filter(str_detect(agency_name, "HOUSING")) |>
   group_by(fiscal_year) |>
@@ -112,7 +109,6 @@ md_payments |>
 
 #Crime
 industry_data_crime <- md_payments |>
-
   filter(str_detect(agency_name, "POLICE") | str_detect(agency_name, "CRIME") | str_detect(agency_name, "SAFETY")) |>
   group_by(fiscal_year) |>
   summarise(total_crime = sum(amount))
@@ -122,7 +118,6 @@ md_payments |>
   count(agency_name)
 
 #Labor
-
 industry_data_labor <- md_payments |>
   filter(str_detect(agency_name, "LABOR")) |>
   group_by(fiscal_year) |>
@@ -133,7 +128,6 @@ md_payments |>
   count(agency_name)
 
 #Environment
-
 industry_data_environment <- md_payments |>
   filter(str_detect(agency_name, "ENVIRONMENT") | str_detect(agency_name, "AGRICULTURE")) |>
   group_by(fiscal_year) |>
@@ -144,7 +138,6 @@ md_payments |>
   count(agency_name)
 
 #Commerce
-
 industry_data_commerce <- md_payments |>
   filter(str_detect(agency_name, "COMMERCE") | str_detect(agency_name, "COMPTROLLER")) |>
   group_by(fiscal_year) |>
@@ -156,7 +149,6 @@ md_payments |>
 
 #Transportation
 industry_data_transportation <- md_payments |>
-
   filter(str_detect(agency_name, "HIGH") | str_detect(agency_name, "TRANS") | str_detect(agency_name, "MDOT")) |>
   group_by(fiscal_year) |>
   summarise(total_transportation = sum(amount))
@@ -166,7 +158,6 @@ md_payments |>
   count(agency_name)
 
 #combine them all
-
 all_industry_data <- industry_data_commerce |>
     inner_join(industry_data_crime, by = 'fiscal_year') |>
     inner_join(industry_data_education, by = 'fiscal_year') |>
@@ -175,6 +166,7 @@ all_industry_data <- industry_data_commerce |>
     inner_join(industry_data_housing, by = 'fiscal_year') |>
     inner_join(industry_data_labor, by = 'fiscal_year') |>
     inner_join(industry_data_transportation, by = 'fiscal_year')
+
 
 ```
 
@@ -217,6 +209,7 @@ md_payments |>
 
 ```{r}
 ### Question 4: Where are lower payments going compared to higher one?
+
 md_payments_low <- md_payments |>
   filter(amount < 100) |>
   rename(amount_low = amount)
@@ -238,6 +231,7 @@ md_payments_high |>
   arrange(desc(count))
 
 # The Maryland Department of Health, on the other hand, had the most payments above $1,000,000, with 5330 'high' payments.
+
   
 
 ```
@@ -245,7 +239,7 @@ md_payments_high |>
 ```{r}
 ### Question 5: What types of payments are going to education? Are there differences in which systems recieve more/less money
 
-#Using our data of each sector, we focused on education spending to see which agencies recieved the most money and how spending changed over time specifically within education.
+# Using our data of each sector, we focused on education spending to see which agencies recieved the most money and how spending changed over time specifically within education.
 
 industry_data_education <- md_payments |>
   filter(str_detect(agency_name, "EDUCATION") | str_detect(agency_name, "SCHOOL")) |>
@@ -261,6 +255,7 @@ md_payments |>
   filter(str_detect(agency_name, "EDUCATION") | str_detect(agency_name, "SCHOOL")) |>
   arrange(desc(amount))
 
-#When we arrange the payments from the education department from highest to lowest, the highest payment went to the Mount Rainier Police Department, which could be something to look into. After this, Baltimore City Public Schools recieved the next highest payment followed by the Prince George's County Board of Education and Prince George's County Public Schools. We noticed Overlea High School in Baltimore County was one of the few schools that recieved such a high payment as opposed to the districts.
+# When we arrange the payments from the education department from highest to lowest, the highest payment went to the Mount Rainier Police Department, which could be something to look into. After this, Baltimore City Public Schools recieved the next highest payment followed by the Prince George's County Board of Education and Prince George's County Public Schools. We noticed Overlea High School in Baltimore County was one of the few schools that recieved such a high payment as opposed to the districts.
+
 
 ```
