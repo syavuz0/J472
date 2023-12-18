@@ -7,7 +7,7 @@ output: html_notebook
 # Load libraries!
 library(tidyverse)
 library(janitor)
-library(ggplot2)
+library(tidycensus)
 
 options(scipen=999)
 ```
@@ -74,6 +74,8 @@ payments_minus_2023_24 |>
 
 ```{r}
 ### Question 2: Which industries spent the most money?
+
+# We chose not to combine the count of agencies with the industry data to visibly see the different agencies that were included in each str_detect. This allowed us to view what was counted and have a more reliable and understandable dataset.
 
 #Payments by industry
 
