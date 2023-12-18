@@ -26,31 +26,57 @@ view(md_payments)
 ```{r}
 ### Question 1: How does the distribution of spending change from year to year?
 
+
+# Fiscal 2023 saw the highest spending from the Maryland government with $193,756,398,403 paid.
+# Fiscal 2022 was $36,656,748,838	
+
 md_payments_by_year <- md_payments |>
   group_by(fiscal_year) |>
   summarise(total = sum(amount)) |>
   arrange(desc(total)) 
 
-md_payments_by_year
+md_payments |>
+  filter(fiscal_year == 2024) |>
+  arrange(desc(amount)) 
 
-md_payments_by_year |>
+md_payments |>
+  filter(fiscal_year == 2023) |>
+  arrange(desc(amount)) 
+
+#looking at just the payments in fiscal 2023, sorted from highest to lowest, payments are repeated five times so they are counted five times, which is why the total money seems to be so high. The agency name, vendor name and amount are the exact same, and each is repeated the same amount so we believe this is a data entry error that made its way into the dataset.
+
+md_payments |>
+  filter(fiscal_year == 2023) |>
+  arrange(desc(amount))
+
+
+payments_minus_2023_24 <- md_payments |>
+  filter(!fiscal_year == 2023) |>
+  filter(!fiscal_year == 2024) |>
+  group_by(fiscal_year) |>
+  summarise(total = sum(amount)) |>
+  arrange(desc(total)) 
+
+payments_minus_2023_24
+
+#here, we filtered for every year except for 2023 which had the error in the data to then visualize how spending changed from year to year. We also took out fiscal 2024 because the fiscal year has not ended yet.
+
+payments_minus_2023_24 |>
   ggplot() + 
-  geom_bar(aes(x=fiscal_year, weight=total)) +
+  geom_line(aes(x=fiscal_year, y=total)) +
   labs(
     title = "Total Money Spent by State of Maryland per Fiscal Year",
     x = "Fiscal Year",
     y = "Total Amount",
-    caption = "source: Maryland State Payments Data") +
-  coord_flip()
+    caption = "source: Maryland State Payments Data") 
 
-
-# Fiscal 2023 saw the highest spending from the Maryland government with $193,756,398,403 paid.
-# Fiscal 2022 was $36,656,748,838	
 
 ```
 
 ```{r}
 ### Question 2: Which industries spent the most money?
+
+#Payments by industry
 
 #Health
 industry_data_health <- md_payments |>
@@ -155,15 +181,13 @@ all_industry_data <- industry_data_commerce |>
 ```{r}
 ### Question 3: What counties or zip codes receive the most money?
 
-#Getting acs data on ZCTA
-
+# ACS data for total population for each zipcode
 md_zip_population <- get_acs(geography = "zcta",
               variables = c(population = "B01001_001"),
               year = 2019,
               state = "MD")
 
 # Filtering md_payments to match the ZCTA data
-
 md_payments_2019 <- md_payments |>
   filter(fiscal_year=="2019")|>
   group_by(vendor_zip)|>
@@ -171,42 +195,72 @@ md_payments_2019 <- md_payments |>
   arrange(desc(amount))
 
 # Joining the md_payments with ZCTA data
-
 md_payments_2019 <- md_payments_2019 |>
   inner_join(md_zip_population, by=c('vendor_zip'='GEOID'))
+
 md_payments_2019 <- md_payments_2019 |>
   mutate(rate = estimate/amount*100)
 
+#The rate showed the money spent by the State of Maryland in relation to the population of a given zipcode. But this did not show us much.
 
+md_payments_2019
+
+#We used 2019 data as that is the only year that we also had population data for. The zipcode that the State of Maryland gave the most money to was 21202, which is in Baltimore.
+
+md_payments |>
+  filter(vendor_zip == 21202) |>
+  arrange(desc(amount))
+  
+#The highest payments in this zipcode overwhelmingly went to Baltimore City Public Schools from the Maryland State Department of Education.
+``
 ```
 
 ```{r}
 ### Question 4: Where are lower payments going compared to higher one?
-
 md_payments_low <- md_payments |>
   filter(amount < 100) |>
-  rename(amount_low =amount)
+  rename(amount_low = amount)
 
 md_payments_low |>
-  summarise(agency_name,vendor_name,amount_low)
+  group_by(agency_name) |>
+  summarise(vendor_name, amount_low, count=n()) |>
+  arrange(desc(count))
+
+#The Maryland State Department of Education paid the most payments under $100, as it had a count of 4383 'low' payments
 
 md_payments_high <- md_payments |>
   filter(amount > 1000000) |>
-  rename(amount_high =amount)
+  rename(amount_high = amount)
 
 md_payments_high |> 
-  summarise(agency_name,vendor_name,amount_high)
+  group_by(agency_name) |>
+  summarise(vendor_name, amount_high, count=n()) |>
+  arrange(desc(count))
 
-md_payments_low |>
-  ggplot() +
-  geom_bar(aes(x=reorder(vendor_name, amount, weight=amount) +
-  coord_flip()  
+# The Maryland Department of Health, on the other hand, had the most payments above $1,000,000, with 5330 'high' payments.
   
-# isn't displaying the graph for some reason, instead lists the objects 
-# problem might be with the vendor_name, amount section
+
 ```
 
 ```{r}
 ### Question 5: What types of payments are going to education? Are there differences in which systems recieve more/less money
+
+#Using our data of each sector, we focused on education spending to see which agencies recieved the most money and how spending changed over time specifically within education.
+
+industry_data_education <- md_payments |>
+  filter(str_detect(agency_name, "EDUCATION") | str_detect(agency_name, "SCHOOL")) |>
+  group_by(fiscal_year) |>
+  summarise(total_education = sum(amount))
+
+md_payments |>
+  filter(str_detect(agency_name, "EDUCATION") | str_detect(agency_name, "SCHOOL")) |>
+  count(agency_name)
+
+
+md_payments |>
+  filter(str_detect(agency_name, "EDUCATION") | str_detect(agency_name, "SCHOOL")) |>
+  arrange(desc(amount))
+
+#When we arrange the payments from the education department from highest to lowest, the highest payment went to the Mount Rainier Police Department, which could be something to look into. After this, Baltimore City Public Schools recieved the next highest payment followed by the Prince George's County Board of Education and Prince George's County Public Schools. We noticed Overlea High School in Baltimore County was one of the few schools that recieved such a high payment as opposed to the districts.
 
 ```
